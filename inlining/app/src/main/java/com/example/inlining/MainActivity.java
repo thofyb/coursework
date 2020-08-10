@@ -42,6 +42,26 @@ public class MainActivity extends AppCompatActivity {
                 calcFunc();
                 calcFunc();
                 calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
                 //Log.i("com.example.inlining", String.valueOf(i));
                 publishProgress(i);
             }
@@ -61,9 +81,8 @@ public class MainActivity extends AppCompatActivity {
             mResultTextView.setText("Curr counter: " + values[0] + " of " + MAX_CYCLES);
         }
 
-        private long calcFunc() {
-            return System.currentTimeMillis();
-            //Log.i("com.example.inlining", "currTime: " + time);
+        private void calcFunc() {
+            System.currentTimeMillis();
         }
     }
 
