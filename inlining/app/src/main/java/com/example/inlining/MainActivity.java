@@ -42,26 +42,6 @@ public class MainActivity extends AppCompatActivity {
                 calcFunc();
                 calcFunc();
                 calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
-                calcFunc();
                 //Log.i("com.example.inlining", String.valueOf(i));
                 publishProgress(i);
             }
