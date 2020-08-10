@@ -25,31 +25,7 @@ public class MainActivity extends AppCompatActivity {
         mStartTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Thread calc = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        long startTime = System.currentTimeMillis();
-
-                        for (int i = 0; i < MAX_CYCLES; i++) {
-                            calcFunc();
-                            calcFunc();
-                            calcFunc();
-                            calcFunc();
-                            calcFunc();
-                            calcFunc();
-                            calcFunc();
-                            calcFunc();
-                            calcFunc();
-                            calcFunc();
-//                            Log.i("com.example.inlining", String.valueOf(i));
-//                            publishProgress(i);
-                        }
-
-//                        long endTime = System.currentTimeMillis();
-
-//                        mResultTextView.append("Execution time: " + (startTime - endTime) + "ms\n");
-                    }
-                });
+                Thread calc = new Thread(new CalcTask());
                 long startTime, endTime;
                 startTime = System.currentTimeMillis();
                 calc.start();
@@ -69,9 +45,33 @@ public class MainActivity extends AppCompatActivity {
 //        mResultTextView.append("Execution time: " + totalTime / 1000 + " s");
     }
 
-    private void calcFunc() {
-        System.currentTimeMillis();
+    private class CalcTask implements Runnable {
+        @Override
+        public void run() {
+            for (int i = 0; i < MAX_CYCLES; i++) {
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+                calcFunc();
+//                            Log.i("com.example.inlining", String.valueOf(i));
+//                            publishProgress(i);
+            }
+        }
+
+        private void calcFunc() {
+            System.currentTimeMillis();
+        }
     }
+
+//    private void calcFunc() {
+//        System.currentTimeMillis();
+//    }
 
 //    private class CalcTask extends AsyncTask<Integer, Integer, Long> {
 //        int MAX_CYCLES = 1000;
