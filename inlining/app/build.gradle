@@ -3,10 +3,13 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         idk {
-            storeFile file('D:\\SPBU\\3rd_year\\Coursework\\code_stuff\\keys\\key_storage.jks')
-            storePassword 'qweqwe'
-            keyAlias 'inlining_key'
-            keyPassword 'qweqwe'
+            Properties properties = new Properties()
+            properties.load(project.file('keystorage.properties').newDataInputStream())
+
+            storeFile       file(properties.getProperty('keystorage.dir'))
+            storePassword   properties.getProperty('storage.password')
+            keyAlias        properties.getProperty('key.alias')
+            keyPassword     properties.getProperty('key.password')
         }
     }
     compileSdkVersion 29
