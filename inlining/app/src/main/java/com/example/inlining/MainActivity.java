@@ -3,6 +3,7 @@ package com.example.inlining;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,6 +13,10 @@ public class MainActivity extends AppCompatActivity {
     Button mStartTestButton;
     static int MAX_CYCLES = 1000000;
     int TEST_NUMBER = 15;
+
+    static {
+        System.loadLibrary("affinity-lib");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void run() {
+//            Log.d("INLINING_JNI", "ready to launch");
+//            testJNI();
+//            checkAffinity();
+            setAffinity();
+//            checkAffinity();
+//            Log.d("INLINING_JNI", "------------------------------------------------------------------------------------");
             for (int i = 0; i < cycles; i++) {
                 calcFunc();
                 calcFunc();
@@ -67,5 +78,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void calcFunc() { System.currentTimeMillis(); }
+
+        public native void testJNI();
+
+        public native void checkAffinity();
+
+        public native void setAffinity();
     }
 }

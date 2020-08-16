@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.4.1)
 
 add_library( affinity-lib
              SHARED
-             src/main/cpp/setAffinityMethod.cpp )
+        src/main/cpp/affinity-lib.cpp)
 
 find_library(
         log-lib
