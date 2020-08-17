@@ -45,8 +45,8 @@ Java_com_example_inlining_MainActivity_00024CalcTask_checkAffinity(JNIEnv *env, 
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_inlining_MainActivity_00024CalcTask_setAffinity(JNIEnv *env, jobject thiz) {
-    unsigned int mask = 1;
+Java_com_example_inlining_MainActivity_00024CalcTask_setAffinity(JNIEnv *env, jobject thiz, jint arg) {
+    unsigned int mask = (unsigned int) arg;
     int err, syscallres;
     pid_t pid = gettid();
     syscallres = syscall(__NR_sched_setaffinity, pid, sizeof(mask), &mask);
@@ -58,3 +58,4 @@ Java_com_example_inlining_MainActivity_00024CalcTask_setAffinity(JNIEnv *env, jo
         __android_log_print(ANDROID_LOG_DEBUG, "INLINING_JNI", "set mask %d=0x%x", mask, mask);
     }
 }
+
