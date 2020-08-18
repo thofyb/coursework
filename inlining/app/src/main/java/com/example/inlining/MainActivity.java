@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.os.Process;
 
 public class MainActivity extends AppCompatActivity {
     TextView mResultTextView;
@@ -14,7 +15,8 @@ public class MainActivity extends AppCompatActivity {
     static int MAX_CYCLES = 1000000;
     int TEST_NUMBER = 15;
     public volatile static long TOTAL_TIME = 0;
-    public static int MASK = 1;
+    public volatile static long TOTAL_ETIME = 0;
+    public static int MASK = 0b10000;
 
 
     static {
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 long avg = 0;
+                long avge = 0;
                 Thread warmup = new Thread((new CalcTask()));
                 warmup.start();
                 try {
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                mResultTextView.append("W.  Execution time: " + TOTAL_TIME + "ms\n");
+                mResultTextView.append("W.  Execution time: " + TOTAL_TIME + "ms, " + TOTAL_ETIME + "\n");
 
                 for (int i = 1; i <= TEST_NUMBER; i++) {
                     Thread calc = new Thread(new CalcTask());
@@ -56,26 +59,28 @@ public class MainActivity extends AppCompatActivity {
                     }
 //                    totalTime = System.currentTimeMillis();
 //                    totalTime -= startTime;
-                    mResultTextView.append(i + ".  Execution time: " + TOTAL_TIME + "ms\n");
+                    mResultTextView.append(i + ".  Execution time: " + TOTAL_TIME + "ms, " + TOTAL_ETIME + "\n");
                     avg += TOTAL_TIME;
+                    avge += TOTAL_ETIME;
                 }
-                mResultTextView.append("Average time: " + (avg / TEST_NUMBER));
+                mResultTextView.append("Average time: " + (avg / TEST_NUMBER) + ", " + (avge / TEST_NUMBER));
             }
         });
     }
 
-    private class CalcTask implements Runnable {
+    private static class CalcTask implements Runnable {
         public int cycles = MAX_CYCLES;
         @Override
         public void run() {
 //            Log.d("INLINING_JNI", "ready to launch");
 //            testJNI();
-//            checkAffinity();
+            checkAffinity();
             setAffinity(MASK);
 //            checkAffinity();
 //            Log.d("INLINING_JNI", "------------------------------------------------------------------------------------");
-            long startTime, endTime;
+            long startTime, endTime, startETime, endETime;
             startTime = System.currentTimeMillis();
+            startETime = Process.getElapsedCpuTime();
             for (int i = 0; i < cycles; i++) {
                 calcFunc();
                 calcFunc();
@@ -89,7 +94,9 @@ public class MainActivity extends AppCompatActivity {
                 calcFunc();
             }
             endTime = System.currentTimeMillis();
+            endETime = Process.getElapsedCpuTime();
             MainActivity.TOTAL_TIME = endTime - startTime;
+            MainActivity.TOTAL_ETIME = endETime - startETime;
         }
 
         private void calcFunc() { System.currentTimeMillis(); }
