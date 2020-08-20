@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -104,14 +105,20 @@ public class MainActivity extends AppCompatActivity {
             setAffinity(MASK);
             int pid = PID;
             long startTime, endTime, startETime, endETime, startPTime, endPTime;
+            int[] startProc, endProc;
+            List<Pair<Integer, Integer>> stats1, stats2;
+
             Log.d(TAG, "run: ====================================================================");
             Log.d(TAG, "run: CURRENT TEST: " + CURR_ATTEMPT);
-            List<Pair<Integer, Integer>> stats1, stats2;
+
             stats1 = getStats(execCMD(cmd));
+//            startProc = getProcStat(execCMD("cat /proc/stat"));
             startTime = System.currentTimeMillis();
             startETime = Process.getElapsedCpuTime();
+
 //            startPTime = getTime(execCMD("cat /proc/" + pid + "/stat"));
-            Log.d(TAG, "run: " + execCMD("cat /proc" + pid + "/stat"));
+//            Log.d(TAG, "run: " + execCMD("cat /proc" + pid + "/stat"));
+
             for (int i = 0; i < cycles; i++) {
                 calcFunc();
                 calcFunc();
@@ -124,18 +131,22 @@ public class MainActivity extends AppCompatActivity {
                 calcFunc();
                 calcFunc();
             }
+
+            stats2 = getStats(execCMD(cmd));
+//            endProc = getProcStat(execCMD("cat /proc/stat"));
             endTime = System.currentTimeMillis();
             endETime = Process.getElapsedCpuTime();
+
 //            endPTime = getTime(execCMD("cat /proc/" + pid + "/stat"));
-            stats2 = getStats(execCMD(cmd));
             List<Pair<Integer, Integer>> delta = getDelta(stats1, stats2);
-            Log.d(TAG, "run: Delta: \n" + getDataString(delta));
 
             MainActivity.TOTAL_TIME = endTime - startTime;
             MainActivity.TOTAL_ETIME = endETime - startETime;
 
+            Log.d(TAG, "run: Delta: \n" + getDataString(delta));
             Log.d(TAG, "run: total time:     " + TOTAL_TIME);
             Log.d(TAG, "run: elapsed time:   " + TOTAL_ETIME);
+//            Log.d(TAG, "run: /proc/stat:     " + getProcStatDelta(startProc, endProc));
 //            Log.d(TAG, "run: /proc/pid/stat: " + (endPTime - startPTime));
         }
 
@@ -146,6 +157,33 @@ public class MainActivity extends AppCompatActivity {
         public native void checkAffinity();
 
         public native void setAffinity(int arg);
+
+        private int[] getProcStat(String arg) {
+            String[] tmp = arg.split("\n");
+            tmp = tmp[1].split(" ");
+            tmp = Arrays.copyOfRange(tmp, 3, 7);
+            int[] res = new int[4];
+
+            for (int i = 0; i < res.length; i++) {
+                res[i] = Integer.parseInt(tmp[i]);
+            }
+
+            return res;
+        }
+
+        private String getProcStatDelta (int[] a1, int[] a2) {
+            int[] tmp = new int[4];
+            for (int i = 0; i < tmp.length; i++) {
+                tmp[i] = a2[i] - a1[1];
+            }
+
+            StringBuilder str = new StringBuilder();
+
+            for (int i: tmp) {
+                str.append(i).append(" ");
+            }
+            return str.toString();
+        }
 
         private int getTime(String arg) {
             String[] tmp = arg.split(" ");
