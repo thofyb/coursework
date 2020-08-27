@@ -1,0 +1,2 @@
+rootProject.name='Outlining'
+include ':app'
