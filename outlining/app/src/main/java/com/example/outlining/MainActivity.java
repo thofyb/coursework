@@ -19,11 +19,11 @@ public class MainActivity extends AppCompatActivity {
     Button mStartTestButton;
     static String TAG = "OUTLINING";
 
-    static int MAX_CYCLES = 1000000;
+    static int MAX_CYCLES = 100000;
     int TEST_NUMBER = 15;
     public volatile static long TOTAL_TIME = 0;
     public volatile static long TOTAL_ETIME = 0;
-    public static int MASK = 0b1;
+    public static int MASK = 0b10000;
     public static int CORE = 1;
     public static int CURR_ATTEMPT = 0;
     static int PID = 0;
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                mResultTextView.append("W.  Execution time: " + TOTAL_TIME + "ms, " + TOTAL_ETIME + "\n");
+                mResultTextView.append("W.  Execution time: " + TOTAL_ETIME + "ms\n");
 
                 for (int i = 1; i <= TEST_NUMBER; i++) {
                     CURR_ATTEMPT = i;
@@ -69,11 +69,11 @@ public class MainActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    mResultTextView.append(i + ".  Execution time: " + TOTAL_TIME + "ms, " + TOTAL_ETIME + "\n");
+                    mResultTextView.append(i + ".  Execution time: " + TOTAL_ETIME + "ms\n");
                     avg += TOTAL_TIME;
                     avge += TOTAL_ETIME;
                 }
-                mResultTextView.append("Average time: " + (avg / TEST_NUMBER) + ", " + (avge / TEST_NUMBER));
+                mResultTextView.append("Average time: " + (avge / TEST_NUMBER));
             }
         });
     }
