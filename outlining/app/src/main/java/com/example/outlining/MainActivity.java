@@ -13,6 +13,7 @@ import android.os.Process;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     TextView mResultTextView;
@@ -84,134 +85,143 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             setAffinity(MASK);
+
+            Log.d(TAG, "run: ====================================================================");
             long startETime, endETime;
 
             String[] arr = new String[20];
 
-            Log.d(TAG, "run: ====================================================================");
+            Log.d(TAG, "run: arr.length = " + arr.length);
+
+            Arrays.fill(arr, "empty");
+
+            for (int i = 0; i < arr.length; i++) {
+                Log.d(TAG, "run: arr[" + i + "]: " + arr[i]);
+            }
+
             Log.d(TAG, "run: CURRENT TEST: " + CURR_ATTEMPT);
 
             startETime = Process.getElapsedCpuTime();
 
             for (int i = 0; i < cycles; i++) {
-                arr[0] = new StringBuilder("1st mill: ")
+                arr[0] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[1] = new StringBuilder("1st mill: ")
+                arr[1] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[2] = new StringBuilder("1st mill: ")
+                arr[2] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[3] = new StringBuilder("1st mill: ")
+                arr[3] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[4] = new StringBuilder("1st mill: ")
+                arr[4] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[5] = new StringBuilder("1st mill: ")
+                arr[5] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[6] = new StringBuilder("1st mill: ")
+                arr[6] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[7] = new StringBuilder("1st mill: ")
+                arr[7] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[8] = new StringBuilder("1st mill: ")
+                arr[8] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[9] = new StringBuilder("1st mill: ")
+                arr[9] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[10] = new StringBuilder("1st mill: ")
+                arr[10] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[11] = new StringBuilder("1st mill: ")
+                arr[11] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[12] = new StringBuilder("1st mill: ")
+                arr[12] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[13] = new StringBuilder("1st mill: ")
+                arr[13] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[14] = new StringBuilder("1st mill: ")
+                arr[14] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[15] = new StringBuilder("1st mill: ")
+                arr[15] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[16] = new StringBuilder("1st mill: ")
+                arr[16] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[17] = new StringBuilder("1st mill: ")
+                arr[17] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[18] = new StringBuilder("1st mill: ")
+                arr[18] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
-                arr[19] = new StringBuilder("1st mill: ")
+                arr[19] = new StringBuilder("\n1st mill: ")
                         .append(System.currentTimeMillis())
-                        .append("\n2nd mill: ")
-                        .append(System.currentTimeMillis())
+//                        .append("\n2nd mill: ")
+//                        .append(System.currentTimeMillis())
                         .toString();
 
             }
@@ -220,8 +230,8 @@ public class MainActivity extends AppCompatActivity {
 
             MainActivity.TOTAL_ETIME = endETime - startETime;
 
-            for (String str : arr) {
-                Log.d(TAG, "run: " + str);
+            for (int i = 0; i < arr.length; i++) {
+                Log.d(TAG, "run: arr[" + i + "]: " + arr[i]);
             }
 
 
