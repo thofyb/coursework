@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     int TEST_NUMBER = 15;
     public volatile static long TOTAL_TIME = 0;
     public volatile static long TOTAL_ETIME = 0;
-    public static int MASK = 0b1;
+    public static int MASK = 0b1000;
     public static int CORE = 1;
     public static int CURR_ATTEMPT = 0;
     static int PID = 0;
@@ -265,5 +265,10 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    private static class ExecutionHandler {
+
     }
 }
