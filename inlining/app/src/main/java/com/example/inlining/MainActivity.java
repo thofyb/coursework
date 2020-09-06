@@ -111,13 +111,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "run: ====================================================================");
             Log.d(TAG, "run: CURRENT TEST: " + CURR_ATTEMPT);
 
-            stats1 = getStats(execCMD(cmd));
-//            startProc = getProcStat(execCMD("cat /proc/stat"));
-            startTime = System.currentTimeMillis();
             startETime = Process.getElapsedCpuTime();
-
-//            startPTime = getTime(execCMD("cat /proc/" + pid + "/stat"));
-//            Log.d(TAG, "run: " + execCMD("cat /proc" + pid + "/stat"));
 
             for (int i = 0; i < cycles; i++) {
                 calcFunc();
@@ -132,117 +126,16 @@ public class MainActivity extends AppCompatActivity {
                 calcFunc();
             }
 
-            stats2 = getStats(execCMD(cmd));
-//            endProc = getProcStat(execCMD("cat /proc/stat"));
-            endTime = System.currentTimeMillis();
             endETime = Process.getElapsedCpuTime();
 
-//            endPTime = getTime(execCMD("cat /proc/" + pid + "/stat"));
-            List<Pair<Integer, Integer>> delta = getDelta(stats1, stats2);
-
-            MainActivity.TOTAL_TIME = endTime - startTime;
             MainActivity.TOTAL_ETIME = endETime - startETime;
 
-            Log.d(TAG, "run: Delta: \n" + getDataString(delta));
-            Log.d(TAG, "run: total time:     " + TOTAL_TIME);
             Log.d(TAG, "run: elapsed time:   " + TOTAL_ETIME);
-//            Log.d(TAG, "run: /proc/stat:     " + getProcStatDelta(startProc, endProc));
-//            Log.d(TAG, "run: /proc/pid/stat: " + (endPTime - startPTime));
         }
 
         private void calcFunc() { System.currentTimeMillis(); }
 
-        public native void testJNI();
-
-        public native void checkAffinity();
-
         public native void setAffinity(int arg);
-
-        private int[] getProcStat(String arg) {
-            String[] tmp = arg.split("\n");
-            tmp = tmp[1].split(" ");
-            tmp = Arrays.copyOfRange(tmp, 3, 7);
-            int[] res = new int[4];
-
-            for (int i = 0; i < res.length; i++) {
-                res[i] = Integer.parseInt(tmp[i]);
-            }
-
-            return res;
-        }
-
-        private String getProcStatDelta (int[] a1, int[] a2) {
-            int[] tmp = new int[4];
-            for (int i = 0; i < tmp.length; i++) {
-                tmp[i] = a2[i] - a1[1];
-            }
-
-            StringBuilder str = new StringBuilder();
-
-            for (int i: tmp) {
-                str.append(i).append(" ");
-            }
-            return str.toString();
-        }
-
-        private int getTime(String arg) {
-            String[] tmp = arg.split(" ");
-            return (Integer.parseInt(tmp[13]) + Integer.parseInt(tmp[14]));
-        }
-
-        private List<Pair<Integer, Integer>> getStats(String arg) {
-            List<Pair<Integer, Integer>> res = new ArrayList<>();
-            String[] tmp = arg.split("\n");
-
-            for (String s : tmp) {
-                String[] str = s.split(" ");
-                res.add(new Pair<>(Integer.parseInt(str[0]), Integer.parseInt(str[1])));
-            }
-
-            return res;
-        }
-
-        private List<Pair<Integer, Integer>> getDelta(List<Pair<Integer, Integer>> data1, List<Pair<Integer, Integer>> data2) {
-            List<Pair<Integer, Integer>> res = new ArrayList<>();
-
-            for (int i = 0; i < data1.size(); i++) {
-                res.add(new Pair<>(data1.get(i).first, (data2.get(i).second - data1.get(i).second)));
-            }
-
-            return res;
-        }
-
-        private String getDataString(List<Pair<Integer, Integer>> data) {
-            StringBuilder res = new StringBuilder();
-            for (Pair<Integer, Integer> pair : data) {
-                res.append(pair.first).append(" ").append(pair.second).append("\n");
-            }
-
-            return res.toString();
-        }
-
-        private static String execCMD(String cmd) {
-            try {
-                java.lang.Process process = runtime.exec(cmd);
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-                int read;
-                char[] buffer = new char[4096];
-                StringBuilder output = new StringBuilder();
-                while ((read = reader.read(buffer)) > 0) {
-                    output.append(buffer, 0, read);
-                }
-                reader.close();
-
-                process.waitFor();
-
-                return output.toString();
-            } catch (IOException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
     }
 
     private static String execCMD(String cmd) {
