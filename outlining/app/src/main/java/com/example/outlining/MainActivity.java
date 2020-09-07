@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.os.Process;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -20,14 +22,16 @@ public class MainActivity extends AppCompatActivity {
     Button mStartTestButton;
     static String TAG = "OUTLINING";
 
-    static int MAX_CYCLES = 100000;
+    static int MAX_CYCLES = 10000;
     int TEST_NUMBER = 15;
-    public volatile static long TOTAL_TIME = 0;
     public volatile static long TOTAL_ETIME = 0;
-    public static int MASK = 0b10000;
-    public static int CORE = 1;
+    public static int CORE = 0;
+    public static int MASK = (int) Math.pow(2, CORE);
     public static int CURR_ATTEMPT = 0;
     static int PID = 0;
+
+    public int MIN_FREQ = 400000;
+    public int MAX_FREQ = 1500000;
 
 
     static {
@@ -43,21 +47,31 @@ public class MainActivity extends AppCompatActivity {
 
         mResultTextView = (TextView) findViewById(R.id.tv_result);
         mResultTextView.setText("PID: " + Process.myPid() + "\n");
-        mResultTextView.append("(nested class, opt on, mask = " + MASK + ")\n");
+        mResultTextView.append("(nested class, opt off, mask = " + MASK + "), cycles = " + MAX_CYCLES + "\n");
 
         mStartTestButton = (Button)  findViewById(R.id.b_startTest);
         mStartTestButton.setText("Start " + TEST_NUMBER + " tests");
         mStartTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long avg = 0;
                 long avge = 0;
-                Thread warmup = new Thread((new CalcTask()));
-                warmup.start();
-                try {
-                    warmup.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+
+                //Getting min and max freq for future changing
+
+                //MIN_FREQ = Integer.parseInt(execCMD("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq"));
+                //MAX_FREQ = Integer.parseInt(execCMD("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq"));
+
+                executeCMDWrite("echo " + MAX_FREQ + " > /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
+
+                Thread warmup;
+                for (int i = 0; i < 3; i++) {
+                    warmup = new Thread((new CalcTask()));
+                    warmup.start();
+                    try {
+                        warmup.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 mResultTextView.append("W.  Execution time: " + TOTAL_ETIME + "ms\n");
 
@@ -71,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     mResultTextView.append(i + ".  Execution time: " + TOTAL_ETIME + "ms\n");
-                    avg += TOTAL_TIME;
                     avge += TOTAL_ETIME;
                 }
                 mResultTextView.append("Average time: " + (avge / TEST_NUMBER));
@@ -94,10 +107,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "run: arr.length = " + arr.length);
 
             Arrays.fill(arr, "empty");
-
-//            for (int i = 0; i < arr.length; i++) {
-//                Log.d(TAG, "run: arr[" + i + "]: " + arr[i]);
-//            }
 
             Log.d(TAG, "run: CURRENT TEST: " + CURR_ATTEMPT);
 
@@ -510,14 +519,24 @@ public class MainActivity extends AppCompatActivity {
 
             MainActivity.TOTAL_ETIME = endETime - startETime;
 
-//            for (int i = 0; i < arr.length; i++) {
-//                Log.d(TAG, "run: arr[" + i + "]: " + arr[i]);
-//            }
-
 
             Log.d(TAG, "run: elapsed time:   " + TOTAL_ETIME);
         }
 
         public native void setAffinity(int arg);
+    }
+
+    private void executeCMDWrite(String cmd){
+        try {
+            java.lang.Process p = Runtime.getRuntime().exec("su");
+            DataOutputStream dos = new DataOutputStream(p.getOutputStream());
+            DataInputStream is = new DataInputStream(p.getInputStream());
+            dos.writeBytes(cmd + "\nexit\n");
+            dos.flush();
+            dos.close();
+            p.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
