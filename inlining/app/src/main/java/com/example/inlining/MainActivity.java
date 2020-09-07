@@ -4,33 +4,32 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.os.Process;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     TextView mResultTextView;
     Button mStartTestButton;
-    Button check;
     static String TAG = "INLINING";
 
     static int MAX_CYCLES = 1000000;
     int TEST_NUMBER = 15;
-    public volatile static long TOTAL_TIME = 0;
     public volatile static long TOTAL_ETIME = 0;
-    public static int MASK = 0b1;
-    public static int CORE = 1;
+    public static int CORE = 0;
+    public static int MASK = (int) Math.pow(2, CORE);
     public static int CURR_ATTEMPT = 0;
     static int PID = 0;
+
+    public int MIN_FREQ = 400000;
+    public int MAX_FREQ = 1500000;
 
 
     static {
@@ -46,23 +45,33 @@ public class MainActivity extends AppCompatActivity {
 
         mResultTextView = (TextView) findViewById(R.id.tv_result);
         mResultTextView.setText("PID: " + Process.myPid() + "\n");
-        mResultTextView.append("(nested class, opt on, mask = " + MASK + ")\n");
+        mResultTextView.append("(nested class, opt off, mask = " + MASK + ")\n");
 
         mStartTestButton = (Button)  findViewById(R.id.b_startTest);
         mStartTestButton.setText("Start " + TEST_NUMBER + " tests");
         mStartTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long avg = 0;
                 long avge = 0;
-                Thread warmup = new Thread((new CalcTask()));
-                warmup.start();
-                try {
-                    warmup.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+
+                //Getting min and max freq for future changing
+
+                //MIN_FREQ = Integer.parseInt(execCMD("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq"));
+                //MAX_FREQ = Integer.parseInt(execCMD("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq"));
+
+                executeCMDWrite("echo " + MAX_FREQ + " > /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
+
+                Thread warmup;
+                for (int i = 0; i < 3; i++) {
+                    warmup = new Thread((new CalcTask()));
+                    warmup.start();
+                    try {
+                        warmup.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-                mResultTextView.append("W.  Execution time: " + TOTAL_TIME + "ms, " + TOTAL_ETIME + "\n");
+                mResultTextView.append("W.  Execution time: " + TOTAL_ETIME + "ms\n");
 
                 for (int i = 1; i <= TEST_NUMBER; i++) {
                     CURR_ATTEMPT = i;
@@ -73,51 +82,28 @@ public class MainActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    mResultTextView.append(i + ".  Execution time: " + TOTAL_TIME + "ms, " + TOTAL_ETIME + "\n");
-                    avg += TOTAL_TIME;
+                    mResultTextView.append(i + ".  Execution time: " + TOTAL_ETIME + "ms\n");
                     avge += TOTAL_ETIME;
                 }
-                mResultTextView.append("Average time: " + (avg / TEST_NUMBER) + ", " + (avge / TEST_NUMBER));
-            }
-        });
+                mResultTextView.append("Average time: " + (avge / TEST_NUMBER));
 
-        check = findViewById(R.id.check);
-        check.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mResultTextView.setText("");
-                mResultTextView.append("PID: " + PID + "\n");
-                String str = "cat /proc/" + PID + "/stat";
-                mResultTextView.append(str + "\n");
-                mResultTextView.append(execCMD(str));
-
+                executeCMDWrite("echo " + MIN_FREQ + " > /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
             }
         });
     }
 
     private static class CalcTask implements Runnable {
         public int cycles = MAX_CYCLES;
-        String cmd = "cat /sys/devices/system/cpu/cpu" + CORE + "/cpufreq/stats/time_in_state";
-        static Runtime runtime = Runtime.getRuntime();
 
         @Override
         public void run() {
             setAffinity(MASK);
-            int pid = PID;
-            long startTime, endTime, startETime, endETime, startPTime, endPTime;
-            int[] startProc, endProc;
-            List<Pair<Integer, Integer>> stats1, stats2;
+            long startETime, endETime;
 
             Log.d(TAG, "run: ====================================================================");
             Log.d(TAG, "run: CURRENT TEST: " + CURR_ATTEMPT);
 
-            stats1 = getStats(execCMD(cmd));
-//            startProc = getProcStat(execCMD("cat /proc/stat"));
-            startTime = System.currentTimeMillis();
             startETime = Process.getElapsedCpuTime();
-
-//            startPTime = getTime(execCMD("cat /proc/" + pid + "/stat"));
-//            Log.d(TAG, "run: " + execCMD("cat /proc" + pid + "/stat"));
 
             for (int i = 0; i < cycles; i++) {
                 calcFunc();
@@ -132,117 +118,16 @@ public class MainActivity extends AppCompatActivity {
                 calcFunc();
             }
 
-            stats2 = getStats(execCMD(cmd));
-//            endProc = getProcStat(execCMD("cat /proc/stat"));
-            endTime = System.currentTimeMillis();
             endETime = Process.getElapsedCpuTime();
 
-//            endPTime = getTime(execCMD("cat /proc/" + pid + "/stat"));
-            List<Pair<Integer, Integer>> delta = getDelta(stats1, stats2);
-
-            MainActivity.TOTAL_TIME = endTime - startTime;
             MainActivity.TOTAL_ETIME = endETime - startETime;
 
-            Log.d(TAG, "run: Delta: \n" + getDataString(delta));
-            Log.d(TAG, "run: total time:     " + TOTAL_TIME);
             Log.d(TAG, "run: elapsed time:   " + TOTAL_ETIME);
-//            Log.d(TAG, "run: /proc/stat:     " + getProcStatDelta(startProc, endProc));
-//            Log.d(TAG, "run: /proc/pid/stat: " + (endPTime - startPTime));
         }
 
         private void calcFunc() { System.currentTimeMillis(); }
 
-        public native void testJNI();
-
-        public native void checkAffinity();
-
         public native void setAffinity(int arg);
-
-        private int[] getProcStat(String arg) {
-            String[] tmp = arg.split("\n");
-            tmp = tmp[1].split(" ");
-            tmp = Arrays.copyOfRange(tmp, 3, 7);
-            int[] res = new int[4];
-
-            for (int i = 0; i < res.length; i++) {
-                res[i] = Integer.parseInt(tmp[i]);
-            }
-
-            return res;
-        }
-
-        private String getProcStatDelta (int[] a1, int[] a2) {
-            int[] tmp = new int[4];
-            for (int i = 0; i < tmp.length; i++) {
-                tmp[i] = a2[i] - a1[1];
-            }
-
-            StringBuilder str = new StringBuilder();
-
-            for (int i: tmp) {
-                str.append(i).append(" ");
-            }
-            return str.toString();
-        }
-
-        private int getTime(String arg) {
-            String[] tmp = arg.split(" ");
-            return (Integer.parseInt(tmp[13]) + Integer.parseInt(tmp[14]));
-        }
-
-        private List<Pair<Integer, Integer>> getStats(String arg) {
-            List<Pair<Integer, Integer>> res = new ArrayList<>();
-            String[] tmp = arg.split("\n");
-
-            for (String s : tmp) {
-                String[] str = s.split(" ");
-                res.add(new Pair<>(Integer.parseInt(str[0]), Integer.parseInt(str[1])));
-            }
-
-            return res;
-        }
-
-        private List<Pair<Integer, Integer>> getDelta(List<Pair<Integer, Integer>> data1, List<Pair<Integer, Integer>> data2) {
-            List<Pair<Integer, Integer>> res = new ArrayList<>();
-
-            for (int i = 0; i < data1.size(); i++) {
-                res.add(new Pair<>(data1.get(i).first, (data2.get(i).second - data1.get(i).second)));
-            }
-
-            return res;
-        }
-
-        private String getDataString(List<Pair<Integer, Integer>> data) {
-            StringBuilder res = new StringBuilder();
-            for (Pair<Integer, Integer> pair : data) {
-                res.append(pair.first).append(" ").append(pair.second).append("\n");
-            }
-
-            return res.toString();
-        }
-
-        private static String execCMD(String cmd) {
-            try {
-                java.lang.Process process = runtime.exec(cmd);
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-                int read;
-                char[] buffer = new char[4096];
-                StringBuilder output = new StringBuilder();
-                while ((read = reader.read(buffer)) > 0) {
-                    output.append(buffer, 0, read);
-                }
-                reader.close();
-
-                process.waitFor();
-
-                return output.toString();
-            } catch (IOException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
     }
 
     private static String execCMD(String cmd) {
@@ -265,5 +150,24 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void executeCMDWrite(String cmd){
+        try {
+            java.lang.Process p = Runtime.getRuntime().exec("su");
+            DataOutputStream dos = new DataOutputStream(p.getOutputStream());
+            DataInputStream is = new DataInputStream(p.getInputStream());
+            dos.writeBytes(cmd + "\nexit\n");
+            dos.flush();
+            dos.close();
+            p.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private static class ExecutionHandler {
+
     }
 }
