@@ -26,6 +26,7 @@ public class ExampleInstrumentedTest {
     @Test
     public void test() {
         ActivityScenario.launch(MainActivity.class);
+        MainActivity.MAX_CYCLES = 1000000;
 
         onView(withId(R.id.b_startTest)).perform(click());
 
