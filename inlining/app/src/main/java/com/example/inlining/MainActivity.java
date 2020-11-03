@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,15 +13,24 @@ import android.os.Process;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
+import com.example.mlib.mClass;
+import com.example.mlib.mClass.Reading;
 
 public class MainActivity extends AppCompatActivity {
     TextView mResultTextView;
     Button mStartTestButton;
     static String TAG = "INLINING";
 
-    static int MAX_CYCLES = 1000000;
+    static int MAX_CYCLES = 100000;
     int TEST_NUMBER = 15;
     public volatile static long TOTAL_ETIME = 0;
     public static int CORE = 0;
@@ -47,17 +57,16 @@ public class MainActivity extends AppCompatActivity {
         mResultTextView.setText("PID: " + Process.myPid() + "\n");
         mResultTextView.append("(nested class, opt off, mask = " + MASK + ")\n");
 
+//        Reading r1 = mClass.makeMeasurement(1);
+//        Reading r2 = mClass.makeMeasurement(1);
+//        mResultTextView.append(mClass.findDiff(r1, r2).toString());
+
         mStartTestButton = (Button)  findViewById(R.id.b_startTest);
         mStartTestButton.setText("Start " + TEST_NUMBER + " tests");
         mStartTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 long avge = 0;
-
-                //Getting min and max freq for future changing
-
-                //MIN_FREQ = Integer.parseInt(execCMD("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq"));
-                //MAX_FREQ = Integer.parseInt(execCMD("cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq"));
 
                 executeCMDWrite("echo " + MAX_FREQ + " > /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
 
@@ -73,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 mResultTextView.append("W.  Execution time: " + TOTAL_ETIME + "ms\n");
 
+                Reading r1 = mClass.makeMeasurement(CORE);
+
                 for (int i = 1; i <= TEST_NUMBER; i++) {
                     CURR_ATTEMPT = i;
                     Thread calc = new Thread(new CalcTask());
@@ -85,9 +96,13 @@ public class MainActivity extends AppCompatActivity {
                     mResultTextView.append(i + ".  Execution time: " + TOTAL_ETIME + "ms\n");
                     avge += TOTAL_ETIME;
                 }
+
+                Reading r2 = mClass.makeMeasurement(CORE);
                 mResultTextView.append("Average time: " + (avge / TEST_NUMBER));
 
                 executeCMDWrite("echo " + MIN_FREQ + " > /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
+
+                mResultTextView.setText(mClass.findDiff(r1, r2).toString());
             }
         });
     }
