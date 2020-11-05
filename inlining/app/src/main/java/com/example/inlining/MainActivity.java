@@ -22,8 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import com.example.mlib.mClass;
-import com.example.mlib.mClass.Reading;
+import com.example.navitaslite.MeasurementTool;
+import com.example.navitaslite.MeasurementTool.Reading;
 
 public class MainActivity extends AppCompatActivity {
     TextView mResultTextView;
@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 mResultTextView.append("W.  Execution time: " + TOTAL_ETIME + "ms\n");
 
-                Reading r1 = mClass.makeMeasurement(CORE);
+                //Reading r1 = mClass.makeMeasurement(CORE);
+                Reading r1 = MeasurementTool.makeMeasurement();
 
                 for (int i = 1; i <= TEST_NUMBER; i++) {
                     CURR_ATTEMPT = i;
@@ -97,12 +98,14 @@ public class MainActivity extends AppCompatActivity {
                     avge += TOTAL_ETIME;
                 }
 
-                Reading r2 = mClass.makeMeasurement(CORE);
+//                Reading r2 = mClass.makeMeasurement(CORE);
+                Reading r2 = MeasurementTool.makeMeasurement();
                 mResultTextView.append("Average time: " + (avge / TEST_NUMBER));
 
                 executeCMDWrite("echo " + MIN_FREQ + " > /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
 
-                mResultTextView.setText(mClass.findDiff(r1, r2).toString());
+                mResultTextView.setText(MeasurementTool.findDiff(r1, r2).toString());
+//                mResultTextView.setText(mClass.findDiff(r1, r2).toString());
             }
         });
     }
