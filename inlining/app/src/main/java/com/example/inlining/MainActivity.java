@@ -22,8 +22,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import com.example.navitaslite.CpuCoreCluster;
 import com.example.navitaslite.MeasurementTool;
 import com.example.navitaslite.MeasurementTool.Reading;
+import com.example.navitaslite.PowerProfile;
 
 public class MainActivity extends AppCompatActivity {
     TextView mResultTextView;
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 mResultTextView.append("W.  Execution time: " + TOTAL_ETIME + "ms\n");
 
                 //Reading r1 = mClass.makeMeasurement(CORE);
-                Reading r1 = MeasurementTool.makeMeasurement();
+                Reading r1 = MeasurementTool.makeMeasurement(MASK);
 
                 for (int i = 1; i <= TEST_NUMBER; i++) {
                     CURR_ATTEMPT = i;
@@ -99,12 +101,22 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 //                Reading r2 = mClass.makeMeasurement(CORE);
-                Reading r2 = MeasurementTool.makeMeasurement();
+                Reading r2 = MeasurementTool.makeMeasurement(MASK);
                 mResultTextView.append("Average time: " + (avge / TEST_NUMBER));
 
                 executeCMDWrite("echo " + MIN_FREQ + " > /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
 
-                mResultTextView.setText(MeasurementTool.findDiff(r1, r2).toString());
+                Reading diff = MeasurementTool.findDiff(r1, r2);
+
+//                mResultTextView.setText((int) MeasurementTool.analyzeMeasurement(diff, getStandPowerProfile()));
+
+                float tmp = MeasurementTool.analyzeMeasurement(diff, getStandPowerProfile());
+                Log.d(TAG, "onClick: " + tmp);
+
+                mResultTextView.setText("done: " + tmp);
+
+//                mResultTextView.setText(MeasurementTool.findDiff(r1, r2).toString());
+
 //                mResultTextView.setText(mClass.findDiff(r1, r2).toString());
             }
         });
@@ -182,6 +194,41 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private PowerProfile getStandPowerProfile() {
+        CpuCoreCluster cluster = new CpuCoreCluster(4);
+
+        cluster.speeds.add(1500000L);
+        cluster.speeds.add(1400000L);
+        cluster.speeds.add(1300000L);
+        cluster.speeds.add(1200000L);
+        cluster.speeds.add(1100000L);
+        cluster.speeds.add(1000000L);
+        cluster.speeds.add( 900000L);
+        cluster.speeds.add( 800000L);
+        cluster.speeds.add( 700000L);
+        cluster.speeds.add( 600000L);
+        cluster.speeds.add( 500000L);
+        cluster.speeds.add( 400000L);
+
+        cluster.powers.add(141F);
+        cluster.powers.add(126F);
+        cluster.powers.add(111F);
+        cluster.powers.add( 98F);
+        cluster.powers.add( 89F);
+        cluster.powers.add( 80F);
+        cluster.powers.add( 70F);
+        cluster.powers.add( 65F);
+        cluster.powers.add( 54F);
+        cluster.powers.add( 50F);
+        cluster.powers.add( 46F);
+        cluster.powers.add( 42F);
+
+        List<CpuCoreCluster> tmp = new ArrayList<>();
+        tmp.add(cluster);
+
+        return new PowerProfile(tmp);
     }
 
 
