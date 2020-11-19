@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     Button mStartTestButton;
     static String TAG = "EOAN";
 
-    static int MAX_CYCLES = 2000000;
+    static int MAX_CYCLES = 10000000;
     int TEST_NUMBER = 15;
     public volatile static float TOTAL_ENERGY = 0;
     public static int CORE = 0;
@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
     public static int CURR_ATTEMPT = 0;
     static int PID = 0;
 
-    public static int MODE = 0; //0 for thirds, 1 for fifteenth
+    static int MODE = 0; //0 for thirds, 1 for fifteenth
+    static int isOptimized = 0 ;
 
     public int MIN_FREQ = 400000;
     public int MAX_FREQ = 1500000;
@@ -52,10 +53,11 @@ public class MainActivity extends AppCompatActivity {
         PID = Process.myPid();
 
         mResultTextView = (TextView) findViewById(R.id.tv_result);
-        mResultTextView.setText("PID: " + Process.myPid() + "\n");
-        mResultTextView.append("opt on\n");
+        mResultTextView.setText("");
+        //mResultTextView.setText("PID: " + Process.myPid() + "\n");
+        mResultTextView.append("opt " + (isOptimized == 0 ? "off" : "on") +"\n");
         mResultTextView.append("mask = " + MASK + "\n");
-        mResultTextView.append("mode = " + MODE + "\n");
+        mResultTextView.append("num of elems = " + (MODE == 0 ? "3" : "15" )  + "\n");
         mResultTextView.append("cycles = " + MAX_CYCLES +  "\n");
 
 
@@ -124,32 +126,46 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < cycles; i++) {
                 tmpstr.delete(0, tmpstr.capacity());
-                tmpstr.append(Thirds.FIRST.name() +
-                        Thirds.SECOND.name() +
-                        Thirds.THIRD.name()
-                );
 
-                tmpstr.append(Thirds.FIRST.name() +
-                        Thirds.SECOND.name() +
-                        Thirds.THIRD.name()
-                );
+                tmpstr.append(Thirds.FIRST.name())
+                        .append(Thirds.SECOND.name())
+                        .append(Thirds.THIRD.name());
 
-                tmpstr.append(Thirds.FIRST.name() +
-                        Thirds.SECOND.name() +
-                        Thirds.THIRD.name()
-                );
+                tmpstr.append(Thirds.FIRST.name())
+                        .append(Thirds.SECOND.name())
+                        .append(Thirds.THIRD.name());
 
-                tmpint += Thirds.FIRST.ordinal() +
-                        Thirds.SECOND.ordinal() +
-                        Thirds.THIRD.ordinal();
+                tmpstr.append(Thirds.FIRST.name())
+                        .append(Thirds.SECOND.name())
+                        .append(Thirds.THIRD.name());
 
-                tmpint += Thirds.FIRST.ordinal() +
-                        Thirds.SECOND.ordinal() +
-                        Thirds.THIRD.ordinal();
+                tmpstr.append(Thirds.FIRST.name())
+                        .append(Thirds.SECOND.name())
+                        .append(Thirds.THIRD.name());
 
-                tmpint += Thirds.FIRST.ordinal() +
-                        Thirds.SECOND.ordinal() +
-                        Thirds.THIRD.ordinal();
+                tmpstr.append(Thirds.FIRST.name())
+                        .append(Thirds.SECOND.name())
+                        .append(Thirds.THIRD.name());
+
+                tmpint += Thirds.FIRST.ordinal();
+                tmpint += Thirds.SECOND.ordinal();
+                tmpint += Thirds.THIRD.ordinal();
+
+                tmpint += Thirds.FIRST.ordinal();
+                tmpint += Thirds.SECOND.ordinal();
+                tmpint += Thirds.THIRD.ordinal();
+
+                tmpint += Thirds.FIRST.ordinal();
+                tmpint += Thirds.SECOND.ordinal();
+                tmpint += Thirds.THIRD.ordinal();
+
+                tmpint += Thirds.FIRST.ordinal();
+                tmpint += Thirds.SECOND.ordinal();
+                tmpint += Thirds.THIRD.ordinal();
+
+                tmpint += Thirds.FIRST.ordinal();
+                tmpint += Thirds.SECOND.ordinal();
+                tmpint += Thirds.THIRD.ordinal();
             }
 
             r2 = MeasurementTool.makeMeasurement(0x11111111);
