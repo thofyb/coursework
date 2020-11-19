@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     Button mStartTestButton;
     static String TAG = "EOANSCO";
 
-    static int MAX_CYCLES = 2000000;
+    static int MAX_CYCLES = 1000000;
     int TEST_NUMBER = 15;
     public volatile static float TOTAL_ENERGY = 0;
     public static int CORE = 0;
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     static int PID = 0;
 
     static int MODE = 0; //0 for thirds, 1 for fifteenth
-    static int isOptimized = 0 ;
+    static int isOptimized = 1 ;
 
     public int MIN_FREQ = 400000;
     public int MAX_FREQ = 1500000;
