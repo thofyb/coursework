@@ -23,9 +23,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     TextView mResultTextView;
     Button mStartTestButton;
-    static String TAG = "EOANSCO";
+    static String TAG = "SCO";
 
-    static int MAX_CYCLES = 1000000;
+    static int MAX_CYCLES = 3000000;
     int TEST_NUMBER = 15;
     public volatile static float TOTAL_ENERGY = 0;
     public static int CORE = 0;
@@ -110,13 +110,27 @@ public class MainActivity extends AppCompatActivity {
             setAffinity(MASK);
             MeasurementTool.Reading r1, r2;
 
+            StringBuilder tmpstr = new StringBuilder();
+            int tmpint = 0;
+
             Log.d(TAG, "run: ====================================================================");
             Log.d(TAG, "run: CURRENT TEST: " + CURR_ATTEMPT);
 
             r1 = MeasurementTool.makeMeasurement(0x11111111);
 
             for (int i = 0; i < cycles; i++) {
+                tmpstr.delete(0, tmpstr.capacity());
 
+                tmpstr.append(SCOHelper.getFirst() + SCOHelper.getSecond() + SCOHelper.getThird());
+
+                tmpstr.append(SCOHelper.getSub() + (SCOHelper.getSubstr().startsWith(SCOHelper.getSub()) ? SCOHelper.getStr() : SCOHelper.getSubstr()));
+
+                tmpint += SCOHelper.getFirst().length() +
+                        SCOHelper.getSecond().length() +
+                        SCOHelper.getThird().length() +
+                        SCOHelper.getSubstr().length() +
+                        SCOHelper.getSub().length() +
+                        SCOHelper.getStr().length();
             }
 
             r2 = MeasurementTool.makeMeasurement(0x11111111);
@@ -127,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
             Log.d(TAG, "run: elapsed ec:   " + TOTAL_ENERGY);
             Log.d(TAG, "run: elapsed ec:   " + diff.toString());
-
+            System.out.println(tmpint * tmpstr.hashCode());
         }
 
         public native void setAffinity(int arg);
