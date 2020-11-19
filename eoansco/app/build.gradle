@@ -1,0 +1,59 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        idk {
+            Properties properties = new Properties()
+            properties.load(project.file('keystorage.properties').newDataInputStream())
+
+            storeFile file(properties.getProperty('keystorage.dir'))
+            storePassword properties.getProperty('storage.password')
+            keyAlias properties.getProperty('key.alias')
+            keyPassword properties.getProperty('key.password')
+        }
+    }
+    compileSdkVersion 29
+    buildToolsVersion "30.0.1"
+
+    defaultConfig {
+        applicationId "com.example.eoansco"
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.idk
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles /*getDefaultProguardFile('proguard-android-optimize.txt'),*/ 'proguard-rules.pro'
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            version "3.10.2"
+            path file('CMakeLists.txt')
+        }
+    }
+    ndkVersion '21.0.6113669'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation 'com.github.thofyb:NavitasLiteLibrary:0.1.2'
+
+}
