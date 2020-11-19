@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
     public static int CURR_ATTEMPT = 0;
     static int PID = 0;
 
-    static int MODE = 0; //0 for thirds, 1 for fifteenth
-    static int isOptimized = 0 ;
+    static int MODE = 1; //0 for thirds, 1 for fifteenth
+    static int isOptimized = 1 ;
 
     public int MIN_FREQ = 400000;
     public int MAX_FREQ = 1500000;
@@ -180,7 +180,74 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        private void runFifteens() {}
+        private void runFifteens() {
+            setAffinity(MASK);
+            MeasurementTool.Reading r1, r2;
+
+            StringBuilder tmpstr = new StringBuilder();
+            StringBuilder dummy = new StringBuilder();
+            int tmpint = 0;
+
+            Log.d(TAG, "run: ====================================================================");
+            Log.d(TAG, "run: CURRENT TEST: " + CURR_ATTEMPT);
+
+            r1 = MeasurementTool.makeMeasurement(0x11111111);
+
+            for (int i = 0; i < cycles; i++) {
+                tmpstr.delete(0, tmpstr.capacity());
+
+                tmpstr.append(Fifteens.FIRST.name())
+                        .append(Fifteens.SECOND.name())
+                        .append(Fifteens.THIRD.name());
+
+                tmpstr.append(Fifteens.FOURTH.name())
+                        .append(Fifteens.FIFTH.name())
+                        .append(Fifteens.SIXTH.name());
+
+                tmpstr.append(Fifteens.SEVENTH.name())
+                        .append(Fifteens.EIGHTH.name())
+                        .append(Fifteens.NINTH.name());
+
+                tmpstr.append(Fifteens.TENTH.name())
+                        .append(Fifteens.ELEVENTH.name())
+                        .append(Fifteens.TWELFTH.name());
+
+                tmpstr.append(Fifteens.THIRTEENTH.name())
+                        .append(Fifteens.FOURTEENTH.name())
+                        .append(Fifteens.FIFTEENTH.name());
+
+                tmpint += Fifteens.FIRST.ordinal();
+                tmpint += Fifteens.SECOND.ordinal();
+                tmpint += Fifteens.THIRD.ordinal();
+
+                tmpint += Fifteens.FOURTH.ordinal();
+                tmpint += Fifteens.FIFTH.ordinal();
+                tmpint += Fifteens.SIXTH.ordinal();
+
+                tmpint += Fifteens.SEVENTH.ordinal();
+                tmpint += Fifteens.EIGHTH.ordinal();
+                tmpint += Fifteens.NINTH.ordinal();
+
+                tmpint += Fifteens.TENTH.ordinal();
+                tmpint += Fifteens.ELEVENTH.ordinal();
+                tmpint += Fifteens.TWELFTH.ordinal();
+
+                tmpint += Fifteens.THIRTEENTH.ordinal();
+                tmpint += Fifteens.FOURTEENTH.ordinal();
+                tmpint += Fifteens.FIFTEENTH.ordinal();
+            }
+
+            r2 = MeasurementTool.makeMeasurement(0x11111111);
+
+            MeasurementTool.Reading diff = MeasurementTool.findDiff(r1, r2);
+
+            MainActivity.TOTAL_ENERGY = MeasurementTool.analyzeMeasurement(diff, PROFILE);
+
+            Log.d(TAG, "run: elapsed ec:   " + TOTAL_ENERGY);
+            Log.d(TAG, "run: elapsed ec:   " + diff.toString());
+            System.out.println(tmpint * tmpstr.hashCode());
+
+        }
 
         public native void setAffinity(int arg);
 
