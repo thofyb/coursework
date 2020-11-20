@@ -21,12 +21,14 @@ class MainActivity : AppCompatActivity() {
     var mResultTextView: TextView? = null
     var mStartTestButton: Button? = null
     var TEST_NUMBER = 15
+
     var MIN_FREQ = 400000
     var MAX_FREQ = 1500000
 
     companion object {
         var TAG = "STATICIZATION"
-        var MAX_CYCLES = 1000000
+        var MAX_CYCLES = 1000
+        var TEST_i = 10000
 
         @Volatile
         var TOTAL_ENERGY = 0f
@@ -34,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         var MASK = Math.pow(2.0, CORE.toDouble()).toInt()
         var CURR_ATTEMPT = 0
         var PID = 0
-        var isOptimized = 1
+        var isOptimized = 0
         private val PROFILE: PowerProfile = standPowerProfile
         private val standPowerProfile: PowerProfile
             private get() {
@@ -124,8 +126,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private class CalcTask : Runnable {
-        var cycles = MAX_CYCLES
         override fun run() {
+            var cycles = MAX_CYCLES
             setAffinity(MASK)
             val r1: MeasurementTool.Reading
             val r2: MeasurementTool.Reading
@@ -134,15 +136,53 @@ class MainActivity : AppCompatActivity() {
             val dummy = StringBuilder()
             var tmpint = 0
 
+            val testnum = TEST_i
+
             Log.d(TAG, "run: ====================================================================")
             Log.d(TAG, "run: CURRENT TEST: $CURR_ATTEMPT")
 
             r1 = MeasurementTool.makeMeasurement(0x11111111)
 
             for (i in 0 until cycles) {
-                tmpint += StatHelper.triangularNumber(i)
-                tmpint += StatHelper.fibonacci(i)
-                tmpint += StatHelper.gcd(i, cycles - i)
+                tmpint += StatHelper.triangularNumber(10000)
+                tmpint += StatHelper.fibonacci(10000)
+                tmpint += StatHelper.gcd(10000, 3221)
+
+                tmpint += StatHelper.triangularNumber(10000)
+                tmpint += StatHelper.fibonacci(10000)
+                tmpint += StatHelper.gcd(10000, 3221)
+
+                tmpint += StatHelper.triangularNumber(10000)
+                tmpint += StatHelper.fibonacci(10000)
+                tmpint += StatHelper.gcd(10000, 3221)
+
+                tmpint += StatHelper.triangularNumber(10000)
+                tmpint += StatHelper.fibonacci(10000)
+                tmpint += StatHelper.gcd(10000, 3221)
+
+                tmpint += StatHelper.triangularNumber(10000)
+                tmpint += StatHelper.fibonacci(10000)
+                tmpint += StatHelper.gcd(10000, 3221)
+
+                tmpint += StatHelper.triangularNumber(10000)
+                tmpint += StatHelper.fibonacci(10000)
+                tmpint += StatHelper.gcd(10000, 3221)
+
+                tmpint += StatHelper.triangularNumber(10000)
+                tmpint += StatHelper.fibonacci(10000)
+                tmpint += StatHelper.gcd(10000, 3221)
+
+                tmpint += StatHelper.triangularNumber(10000)
+                tmpint += StatHelper.fibonacci(10000)
+                tmpint += StatHelper.gcd(10000, 3221)
+
+                tmpint += StatHelper.triangularNumber(10000)
+                tmpint += StatHelper.fibonacci(10000)
+                tmpint += StatHelper.gcd(10000, 3221)
+
+                tmpint += StatHelper.triangularNumber(10000)
+                tmpint += StatHelper.fibonacci(10000)
+                tmpint += StatHelper.gcd(10000, 3221)
             }
 
             r2 = MeasurementTool.makeMeasurement(0x11111111)
