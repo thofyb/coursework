@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
 
             val tmpstr = StringBuilder()
             val dummy = StringBuilder()
-            val tmpint = 0
+            var tmpint = 0
 
             Log.d(TAG, "run: ====================================================================")
             Log.d(TAG, "run: CURRENT TEST: $CURR_ATTEMPT")
@@ -140,6 +140,9 @@ class MainActivity : AppCompatActivity() {
             r1 = MeasurementTool.makeMeasurement(0x11111111)
 
             for (i in 0 until cycles) {
+                tmpint += StatHelper.triangularNumber(i)
+                tmpint += StatHelper.fibonacci(i)
+                tmpint += StatHelper.gcd(i, cycles - i)
             }
 
             r2 = MeasurementTool.makeMeasurement(0x11111111)
