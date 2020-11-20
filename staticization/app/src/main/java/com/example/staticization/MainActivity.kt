@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         var TAG = "STATICIZATION"
-        var MAX_CYCLES = 1000
+        var MAX_CYCLES = 10000
         var TEST_i = 10000
 
         @Volatile
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         var MASK = Math.pow(2.0, CORE.toDouble()).toInt()
         var CURR_ATTEMPT = 0
         var PID = 0
-        var isOptimized = 0
+        var isOptimized = 1
         private val PROFILE: PowerProfile = standPowerProfile
         private val standPowerProfile: PowerProfile
             private get() {
