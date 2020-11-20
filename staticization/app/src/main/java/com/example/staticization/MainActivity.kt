@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         var TAG = "STATICIZATION"
-        var MAX_CYCLES = 10000
+        var MAX_CYCLES = 1000000
         var TEST_i = 10000
 
         @Volatile
@@ -144,45 +144,45 @@ class MainActivity : AppCompatActivity() {
             r1 = MeasurementTool.makeMeasurement(0x11111111)
 
             for (i in 0 until cycles) {
-                tmpint += StatHelper.triangularNumber(10000)
-                tmpint += StatHelper.fibonacci(10000)
-                tmpint += StatHelper.gcd(10000, 3221)
+                tmpint += StatHelper.triangularNumber(1)
+                tmpint += StatHelper.fibonacci(1)
+                tmpint += StatHelper.gcd(1, 1)
 
-                tmpint += StatHelper.triangularNumber(10000)
-                tmpint += StatHelper.fibonacci(10000)
-                tmpint += StatHelper.gcd(10000, 3221)
+                tmpint += StatHelper.triangularNumber(1)
+                tmpint += StatHelper.fibonacci(1)
+                tmpint += StatHelper.gcd(1, 1)
 
-                tmpint += StatHelper.triangularNumber(10000)
-                tmpint += StatHelper.fibonacci(10000)
-                tmpint += StatHelper.gcd(10000, 3221)
+                tmpint += StatHelper.triangularNumber(1)
+                tmpint += StatHelper.fibonacci(1)
+                tmpint += StatHelper.gcd(1, 1)
 
-                tmpint += StatHelper.triangularNumber(10000)
-                tmpint += StatHelper.fibonacci(10000)
-                tmpint += StatHelper.gcd(10000, 3221)
+                tmpint += StatHelper.triangularNumber(1)
+                tmpint += StatHelper.fibonacci(1)
+                tmpint += StatHelper.gcd(1, 1)
 
-                tmpint += StatHelper.triangularNumber(10000)
-                tmpint += StatHelper.fibonacci(10000)
-                tmpint += StatHelper.gcd(10000, 3221)
+                tmpint += StatHelper.triangularNumber(1)
+                tmpint += StatHelper.fibonacci(1)
+                tmpint += StatHelper.gcd(1, 1)
 
-                tmpint += StatHelper.triangularNumber(10000)
-                tmpint += StatHelper.fibonacci(10000)
-                tmpint += StatHelper.gcd(10000, 3221)
+                tmpint += StatHelper.triangularNumber(1)
+                tmpint += StatHelper.fibonacci(1)
+                tmpint += StatHelper.gcd(1, 1)
 
-                tmpint += StatHelper.triangularNumber(10000)
-                tmpint += StatHelper.fibonacci(10000)
-                tmpint += StatHelper.gcd(10000, 3221)
+                tmpint += StatHelper.triangularNumber(1)
+                tmpint += StatHelper.fibonacci(1)
+                tmpint += StatHelper.gcd(1, 1)
 
-                tmpint += StatHelper.triangularNumber(10000)
-                tmpint += StatHelper.fibonacci(10000)
-                tmpint += StatHelper.gcd(10000, 3221)
+                tmpint += StatHelper.triangularNumber(1)
+                tmpint += StatHelper.fibonacci(1)
+                tmpint += StatHelper.gcd(1, 1)
 
-                tmpint += StatHelper.triangularNumber(10000)
-                tmpint += StatHelper.fibonacci(10000)
-                tmpint += StatHelper.gcd(10000, 3221)
+                tmpint += StatHelper.triangularNumber(1)
+                tmpint += StatHelper.fibonacci(1)
+                tmpint += StatHelper.gcd(1, 1)
 
-                tmpint += StatHelper.triangularNumber(10000)
-                tmpint += StatHelper.fibonacci(10000)
-                tmpint += StatHelper.gcd(10000, 3221)
+                tmpint += StatHelper.triangularNumber(1)
+                tmpint += StatHelper.fibonacci(1)
+                tmpint += StatHelper.gcd(1, 1)
             }
 
             r2 = MeasurementTool.makeMeasurement(0x11111111)
