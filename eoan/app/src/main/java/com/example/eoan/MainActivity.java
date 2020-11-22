@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     static int PID = 0;
 
     static int MODE = 1; //0 for thirds, 1 for fifteenth
-    static int isOptimized = 1 ;
+    static int isOptimized = 0 ;
 
     public int MIN_FREQ = 400000;
     public int MAX_FREQ = 1500000;
@@ -127,45 +127,45 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < cycles; i++) {
                 tmpstr.delete(0, tmpstr.capacity());
 
-                tmpstr.append(Thirds.FIRST.name())
-                        .append(Thirds.SECOND.name())
-                        .append(Thirds.THIRD.name());
+                tmpstr.append(Thirds.FIRST1.name())
+                        .append(Thirds.SECOND2.name())
+                        .append(Thirds.THIRD3.name());
 
-                tmpstr.append(Thirds.FIRST.name())
-                        .append(Thirds.SECOND.name())
-                        .append(Thirds.THIRD.name());
+                tmpstr.append(Thirds.FIRST1.name())
+                        .append(Thirds.SECOND2.name())
+                        .append(Thirds.THIRD3.name());
 
-                tmpstr.append(Thirds.FIRST.name())
-                        .append(Thirds.SECOND.name())
-                        .append(Thirds.THIRD.name());
+                tmpstr.append(Thirds.FIRST1.name())
+                        .append(Thirds.SECOND2.name())
+                        .append(Thirds.THIRD3.name());
 
-                tmpstr.append(Thirds.FIRST.name())
-                        .append(Thirds.SECOND.name())
-                        .append(Thirds.THIRD.name());
+                tmpstr.append(Thirds.FIRST1.name())
+                        .append(Thirds.SECOND2.name())
+                        .append(Thirds.THIRD3.name());
 
-                tmpstr.append(Thirds.FIRST.name())
-                        .append(Thirds.SECOND.name())
-                        .append(Thirds.THIRD.name());
+                tmpstr.append(Thirds.FIRST1.name())
+                        .append(Thirds.SECOND2.name())
+                        .append(Thirds.THIRD3.name());
 
-                tmpint += Thirds.FIRST.ordinal();
-                tmpint += Thirds.SECOND.ordinal();
-                tmpint += Thirds.THIRD.ordinal();
+                tmpint += Thirds.FIRST1.ordinal();
+                tmpint += Thirds.SECOND2.ordinal();
+                tmpint += Thirds.THIRD3.ordinal();
 
-                tmpint += Thirds.FIRST.ordinal();
-                tmpint += Thirds.SECOND.ordinal();
-                tmpint += Thirds.THIRD.ordinal();
+                tmpint += Thirds.FIRST1.ordinal();
+                tmpint += Thirds.SECOND2.ordinal();
+                tmpint += Thirds.THIRD3.ordinal();
 
-                tmpint += Thirds.FIRST.ordinal();
-                tmpint += Thirds.SECOND.ordinal();
-                tmpint += Thirds.THIRD.ordinal();
+                tmpint += Thirds.FIRST1.ordinal();
+                tmpint += Thirds.SECOND2.ordinal();
+                tmpint += Thirds.THIRD3.ordinal();
 
-                tmpint += Thirds.FIRST.ordinal();
-                tmpint += Thirds.SECOND.ordinal();
-                tmpint += Thirds.THIRD.ordinal();
+                tmpint += Thirds.FIRST1.ordinal();
+                tmpint += Thirds.SECOND2.ordinal();
+                tmpint += Thirds.THIRD3.ordinal();
 
-                tmpint += Thirds.FIRST.ordinal();
-                tmpint += Thirds.SECOND.ordinal();
-                tmpint += Thirds.THIRD.ordinal();
+                tmpint += Thirds.FIRST1.ordinal();
+                tmpint += Thirds.SECOND2.ordinal();
+                tmpint += Thirds.THIRD3.ordinal();
             }
 
             r2 = MeasurementTool.makeMeasurement(0x11111111);
@@ -252,9 +252,9 @@ public class MainActivity extends AppCompatActivity {
         public native void setAffinity(int arg);
 
         enum Thirds {
-            FIRST,
-            SECOND,
-            THIRD
+            FIRST1,
+            SECOND2,
+            THIRD3
         }
 
         enum Fifteens {
